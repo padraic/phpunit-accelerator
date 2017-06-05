@@ -2,7 +2,9 @@
 
 namespace MyBuilder\PhpunitAccelerator;
 
-class TestListener implements \PHPUnit_Framework_TestListener
+use PHPUnit\Framework\Warning;
+
+class TestListener implements \PHPUnit\Framework\TestListener
 {
     const PHPUNIT_PROPERTY_PREFIX = 'PHPUnit_';
 
@@ -13,7 +15,7 @@ class TestListener implements \PHPUnit_Framework_TestListener
         $this->filterRegisterShutdownFunction = $filterRegisterShutdownFunction;
     }
 
-    public function endTest(\PHPUnit_Framework_Test $test, $time)
+    public function endTest(\PHPUnit\Framework\Test $test, $time)
     {
         $this->safelyFreeProperties($test);
     }
@@ -65,19 +67,21 @@ class TestListener implements \PHPUnit_Framework_TestListener
         fclose($fp);
     }
 
-    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite) {}
+    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) {}
 
-    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {}
+    public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
 
-    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time) {}
+    public function addWarning(\PHPUnit\Framework\Test $test, Warning $e, $time) {}
 
-    public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {}
+    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time) {}
 
-    public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {}
+    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
 
-    public function endTestSuite(\PHPUnit_Framework_TestSuite $suite) {}
+    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
 
-    public function startTest(\PHPUnit_Framework_Test $test) {}
+    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite) {}
 
-    public function addRiskyTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {}
+    public function startTest(\PHPUnit\Framework\Test $test) {}
+
+    public function addRiskyTest(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
 }
