@@ -2,9 +2,15 @@
 
 namespace MyBuilder\PhpunitAccelerator;
 
+use Exception;
 use PHPUnit\Framework\Warning;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\TestListener as BaseTestListener;
+use ReflectionObject;
 
-class TestListener implements \PHPUnit\Framework\TestListener
+class TestListener implements BaseTestListener
 {
     const PHPUNIT_PROPERTY_PREFIX = 'PHPUnit_';
 
@@ -15,7 +21,7 @@ class TestListener implements \PHPUnit\Framework\TestListener
         $this->filterRegisterShutdownFunction = $filterRegisterShutdownFunction;
     }
 
-    public function endTest(\PHPUnit\Framework\Test $test, $time)
+    public function endTest(Test $test, $time)
     {
         $this->safelyFreeProperties($test);
     }
@@ -31,7 +37,7 @@ class TestListener implements \PHPUnit\Framework\TestListener
 
     private function getProperties($test)
     {
-        $reflection = new \ReflectionObject($test);
+        $reflection = new ReflectionObject($test);
 
         if ($this->filterRegisterShutdownFunction === true && $this->registersShutdownFunction($reflection)) {
             return array();
@@ -56,7 +62,7 @@ class TestListener implements \PHPUnit\Framework\TestListener
         $property->setValue($test, null);
     }
 
-    private function registersShutdownFunction(\ReflectionObject $object)
+    private function registersShutdownFunction(ReflectionObject $object)
     {
         $fp = fopen($object->getFilename(), 'rb');
         while (!feof($fp)) {
@@ -67,21 +73,39 @@ class TestListener implements \PHPUnit\Framework\TestListener
         fclose($fp);
     }
 
-    public function startTestSuite(\PHPUnit\Framework\TestSuite $suite) {}
+    public function startTestSuite(TestSuite $suite)
+    {
+    }
 
-    public function addError(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
+    public function addError(Test $test, Exception $e, $time)
+    {
+    }
 
-    public function addWarning(\PHPUnit\Framework\Test $test, Warning $e, $time) {}
+    public function addWarning(Test $test, Warning $e, $time)
+    {
+    }
 
-    public function addFailure(\PHPUnit\Framework\Test $test, \PHPUnit\Framework\AssertionFailedError $e, $time) {}
+    public function addFailure(Test $test, AssertionFailedError $e, $time)
+    {
+    }
 
-    public function addIncompleteTest(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
+    public function addIncompleteTest(Test $test, Exception $e, $time)
+    {
+    }
 
-    public function addSkippedTest(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
+    public function addSkippedTest(Test $test, Exception $e, $time)
+    {
+    }
 
-    public function endTestSuite(\PHPUnit\Framework\TestSuite $suite) {}
+    public function endTestSuite(TestSuite $suite)
+    {
+    }
 
-    public function startTest(\PHPUnit\Framework\Test $test) {}
+    public function startTest(Test $test)
+    {
+    }
 
-    public function addRiskyTest(\PHPUnit\Framework\Test $test, \Exception $e, $time) {}
+    public function addRiskyTest(Test $test, Exception $e, $time)
+    {
+    }
 }

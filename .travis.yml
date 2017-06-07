@@ -1,13 +1,16 @@
 language: php
 
+sudo: false
+
 php:
-    - 5.3
-    - 5.4
-    - 5.5
-    - hhvm
+    - '7.0'
+    - '7.1'
+    - 'nightly'
+    - 'hhvm'
 
 before_script:
-    - curl -s http://getcomposer.org/installer | php
-    - php composer.phar install
+    - composer install
 
-script: bin/phpunit
+script: 
+    - vendor/bin/phpcs
+    - vendor/bin/phpunit
