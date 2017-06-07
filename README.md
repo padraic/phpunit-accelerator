@@ -6,19 +6,13 @@ Inspired by [Kris Wallsmith faster PHPUnit article](http://kriswallsmith.net/pos
 
 Setup and Configuration
 -----------------------
-Add the following to your `composer.json` file
-```json
-{
-    "require-dev": {
-        "mybuilder/phpunit-accelerator": "~1.0"
-    }
-}
-```
+Install it via composer:
 
-Update the vendor libraries
+    composer require "padraic/phpunit-accelerator:^2.0"
 
-    curl -s http://getcomposer.org/installer | php
-    php composer.phar install
+Then update the vendor libraries
+
+    composer install
 
 Usage
 -----
