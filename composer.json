@@ -26,6 +26,9 @@
     "autoload": {
         "psr-4": { "MyBuilder\\PhpunitAccelerator\\": "src" }
     },
+    "autoload-dev": {
+        "psr-4": { "MyBuilder\\PhpunitAccelerator\\": ["tests"] }
+    },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.0"
     }

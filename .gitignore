@@ -1,4 +1,6 @@
 composer.lock
 composer.phar
+phpunit.xml
+phpcs.xml
 bin/
 vendor/

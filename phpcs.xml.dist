@@ -8,6 +8,7 @@
     <arg value="np"/>
 
     <file>src</file>
+    <file>tests</file>
 
     <!-- Include the whole PSR2 standard -->
     <rule ref="PSR2" />

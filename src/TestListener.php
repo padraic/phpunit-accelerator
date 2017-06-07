@@ -6,13 +6,14 @@ use Exception;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\TestListener as BaseTestListener;
 use ReflectionObject;
 
 class TestListener implements BaseTestListener
 {
-    const PHPUNIT_PROPERTY_PREFIX = 'PHPUnit_';
+    const PHPUNIT_PROPERTY_PREFIX = 'PHPUnit';
 
     private $filterRegisterShutdownFunction;
 
@@ -53,7 +54,10 @@ class TestListener implements BaseTestListener
 
     private function isNotPhpUnitProperty($property)
     {
-        return 0 !== strpos($property->getDeclaringClass()->getName(), self::PHPUNIT_PROPERTY_PREFIX);
+        $fqdn = $property->getDeclaringClass()->getName();
+        $fqdnParts = explode('\\', $fqdn);
+
+        return 0 !== stripos($fqdnParts[count($fqdnParts) - 1], self::PHPUNIT_PROPERTY_PREFIX);
     }
 
     private function freeProperty($test, $property)

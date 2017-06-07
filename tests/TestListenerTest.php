@@ -1,8 +1,11 @@
 <?php
 
-use MyBuilder\PhpunitAccelerator\TestListener;
+namespace MyBuilder\PhpunitAccelerator;
 
-class TestListenerTest extends \PHPUnit\Framework\TestCase
+use MyBuilder\PhpunitAccelerator\TestListener;
+use PHPUnit\Framework\TestCase;
+
+class TestListenerTest extends TestCase
 {
     private $listener;
     private $dummyTest;
@@ -13,9 +16,23 @@ class TestListenerTest extends \PHPUnit\Framework\TestCase
     protected function setUp()
     {
         $this->listener = new TestListener();
-        $this->dummyTest = new DummyTest();
+        $this->dummyTest = new class extends PHPUnitFakeTestCase
+        {
+            public $property = 1;
+        };
+
         $this->listenerFiltersShutdownFunction = new TestListener(true);
-        $this->dummyTestRegistersShutdownFunction = new DummyTestRegistersShutdownFunction();
+        $this->dummyTestRegistersShutdownFunction = new class extends PHPUnitFakeTestCase
+        {
+            public $property = 1;
+
+            public function foo()
+            {
+                register_shutdown_function(function () {
+                    return;
+                });
+            }
+        };
     }
 
     /**
@@ -54,25 +71,5 @@ class TestListenerTest extends \PHPUnit\Framework\TestCase
     private function endTest()
     {
         $this->listener->endTest($this->dummyTest, 0);
-    }
-}
-
-class PHPUnit_Fake extends \PHPUnit\Framework\TestCase
-{
-    public $phpUnitProperty = 1;
-}
-
-class DummyTest extends \PHPUnit_Fake
-{
-    public $property = 1;
-}
-
-class DummyTestRegistersShutdownFunction extends \PHPUnit_Fake
-{
-    public $property = 1;
-
-    function foo()
-    {
-        register_shutdown_function(function() {return;});
     }
 }
