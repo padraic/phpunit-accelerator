@@ -6,28 +6,40 @@ use Exception;
 use PHPUnit\Framework\Warning;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\TestListener as BaseTestListener;
 use ReflectionObject;
+use ReflectionProperty;
 
 class TestListener implements BaseTestListener
 {
-    const PHPUNIT_PROPERTY_PREFIX = 'PHPUnit';
+    /*private*/ const PHPUNIT_PROPERTY_PREFIX = 'PHPUnit';
 
+    /**
+     * @var bool
+     */
     private $filterRegisterShutdownFunction;
 
-    public function __construct($filterRegisterShutdownFunction = false)
+    /**
+     * @param bool $filterRegisterShutdownFunction
+     */
+    public function __construct(bool $filterRegisterShutdownFunction = false)
     {
         $this->filterRegisterShutdownFunction = $filterRegisterShutdownFunction;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function endTest(Test $test, $time)
     {
         $this->safelyFreeProperties($test);
     }
 
-    private function safelyFreeProperties($test)
+    /**
+     * @param Test $test
+     */
+    private function safelyFreeProperties(Test $test): void
     {
         foreach ($this->getProperties($test) as $property) {
             if ($this->isSafeToFreeProperty($property)) {
@@ -36,7 +48,12 @@ class TestListener implements BaseTestListener
         }
     }
 
-    private function getProperties($test)
+    /**
+     * @param Test $test
+     *
+     * @return ReflectionProperty[]
+     */
+    private function getProperties(Test $test): array
     {
         $reflection = new ReflectionObject($test);
 
@@ -47,12 +64,22 @@ class TestListener implements BaseTestListener
         return $reflection->getProperties();
     }
 
-    private function isSafeToFreeProperty($property)
+    /**
+     * @param ReflectionProperty $property
+     *
+     * @return bool
+     */
+    private function isSafeToFreeProperty(ReflectionProperty $property): bool
     {
         return !$property->isStatic() && $this->isNotPhpUnitProperty($property);
     }
 
-    private function isNotPhpUnitProperty($property)
+    /**
+     * @param ReflectionProperty $property
+     *
+     * @return bool
+     */
+    private function isNotPhpUnitProperty(ReflectionProperty $property): bool
     {
         $fqdn = $property->getDeclaringClass()->getName();
         $fqdnParts = explode('\\', $fqdn);
@@ -60,13 +87,22 @@ class TestListener implements BaseTestListener
         return 0 !== stripos($fqdnParts[count($fqdnParts) - 1], self::PHPUNIT_PROPERTY_PREFIX);
     }
 
-    private function freeProperty($test, $property)
+    /**
+     * @param Test $test
+     * @param ReflectionProperty $property
+     */
+    private function freeProperty(Test $test, ReflectionProperty $property): void
     {
         $property->setAccessible(true);
         $property->setValue($test, null);
     }
 
-    private function registersShutdownFunction(ReflectionObject $object)
+    /**
+     * @param ReflectionObject $object
+     *
+     * @return bool
+     */
+    private function registersShutdownFunction(ReflectionObject $object): bool
     {
         $fp = fopen($object->getFilename(), 'rb');
         while (!feof($fp)) {
@@ -75,40 +111,69 @@ class TestListener implements BaseTestListener
             }
         }
         fclose($fp);
+
+        return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function startTestSuite(TestSuite $suite)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addError(Test $test, Exception $e, $time)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addWarning(Test $test, Warning $e, $time)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addFailure(Test $test, AssertionFailedError $e, $time)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addIncompleteTest(Test $test, Exception $e, $time)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addSkippedTest(Test $test, Exception $e, $time)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function endTestSuite(TestSuite $suite)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function startTest(Test $test)
     {
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function addRiskyTest(Test $test, Exception $e, $time)
     {
     }

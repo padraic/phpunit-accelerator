@@ -2,7 +2,6 @@
 
 namespace MyBuilder\PhpunitAccelerator;
 
-use MyBuilder\PhpunitAccelerator\TestListener;
 use PHPUnit\Framework\TestCase;
 
 class TestListenerTest extends TestCase
@@ -29,7 +28,7 @@ class TestListenerTest extends TestCase
             public function foo()
             {
                 register_shutdown_function(function () {
-                    return;
+                    return null;
                 });
             }
         };
