@@ -20,9 +20,6 @@
         "php": "^7.0",
         "phpunit/phpunit": "^6.0"
     },
-    "replace": {
-        "mybuilder/phpunit-accelerator": "2.0.x"
-    },
     "autoload": {
         "psr-4": { "MyBuilder\\PhpunitAccelerator\\": "src" }
     },
