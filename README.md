@@ -12,7 +12,7 @@ Install it via composer:
 
 Then update the vendor libraries
 
-    composer install
+    composer update --no-interaction --no-suggest --prefer-dist
 
 Usage
 -----
